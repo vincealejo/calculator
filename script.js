@@ -47,7 +47,7 @@ buttonsHtml.addEventListener("click", (event) => {
     /* Clicking the Div (calculator itself not including buttons) causes all of the buttons to be clicked as well\
     due to the Event Delegation, this prevents that from happening*/
     if(event.target.nodeName === "DIV") return;
-    
+
     if(buttonValue === "=") {
         if(secondNumber == "") return;
         const result = operate(+firstNumber, +secondNumber, operator);
@@ -73,12 +73,21 @@ buttonsHtml.addEventListener("click", (event) => {
     }
 
     if(operator === "") {
+        if(buttonValue === ".") {
+            if(firstNumber.includes(".")) {
+                return;
+            }
+        }
+
         firstNumber += buttonValue;
     } else {
+        if(buttonValue === ".") {
+            if(secondNumber.includes(".")) {
+                return;
+            }
+        }
         secondNumber += buttonValue;
     }
 
     displayToScreen(buttonValue);
 })
-
-
