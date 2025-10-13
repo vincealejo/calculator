@@ -31,6 +31,9 @@ function operate(n1, n2, op) {
     } else if (op === "*"){
         return multiply(n1, n2);
     } else if(op === "/") {
+        if(n2 === 0) {
+            return "Zero cannot be the divisor";
+        }
         return divide(n1, n2);
     }
 }
