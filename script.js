@@ -1,9 +1,28 @@
-const screenHtml = document.querySelector("#screen");
-const buttonsHtml = document.querySelector("#buttons");
+const screenHTML = document.querySelector("#screen");
+const buttonsHTML = document.querySelector("#buttons");
+const firstNumberHTML = document.querySelector("#first-number");
+const secondNumberHTML = document.querySelector("#second-number");
+const operatorHTML = document.querySelector("#operator");
 
 let firstNumber = "";
 let secondNumber = "";
 let operator = "";
+
+
+function operate(n1, n2, operator) {
+    if(operator === "+") {
+        return add(n1, n2);
+    } else if(operator === "-") {
+        return subtract(n1, n2);
+    } else if(operator === "*") {
+        return multiply(n1, n2);
+    } else if(operator === "/") {
+        return divide(n1, n2);
+    } else if(operator === "%") {
+        return modulo(n1, n2);
+    }
+}
+
 
 function add(n1, n2) {
     return n1 + n2;
@@ -17,80 +36,86 @@ function multiply(n1, n2) {
     return n1 * n2;
 }
 
-function divide(n1, n2){
+function divide(n1, n2) {
     return n1 / n2;
 }
 
-function operate(n1, n2, op) {
-
-    // converts n1 and n2 to integer before passing them to the functions
-    if(op === "+") {
-        return add(n1, n2);
-    } else if (op === "-" ){
-        return subtract(n1, n2);
-    } else if (op === "*"){
-        return multiply(n1, n2);
-    } else if(op === "/") {
-        if(n2 === 0) {
-            return "Zero cannot be the divisor";
-        }
-        return divide(n1, n2);
-    }
+function modulo(n1, n2) {
+    return n1 % n2;
 }
 
-function displayToScreen(value, clearScreen = false) {
-    if (clearScreen) screenHtml.innerText = "";
-    screenHtml.innerText += value; 
-}
 
-buttonsHtml.addEventListener("click", (event) => {
+buttonsHTML.addEventListener("click", (event) => {
     const buttonValue = event.target.innerText;
-    const operatorArray = ["+", "-", "*" , "/"];
+    const operatorsArr = ["+", "-", "*", "/", "%"];
 
-    /* Clicking the Div (calculator itself not including buttons) causes all of the buttons to be clicked as well\
-    due to the Event Delegation, this prevents that from happening*/
-    if(event.target.nodeName === "DIV") return;
+    if(event.target.nodeName !== "BUTTON") return;
 
-    if(buttonValue === "=") {
-        if(secondNumber == "") return;
+    if(buttonValue === "CLEAR") {
+        clear();
+        return;
+    }
+
+    if(buttonValue === "DEL") {
+        del();
+        return;
+    }
+
+    // where the operation happens
+    if(buttonValue === "=" || (operatorsArr.includes(buttonValue) && operator !== "")) {
+        if(secondNumber === "") return;
         const result = operate(+firstNumber, +secondNumber, operator);
-        firstNumber = result;
-        secondNumber = "";
-        operator = ""
-        displayToScreen(firstNumber, true);
+        clear(result);
+        if(buttonValue === "=") {
+            operator = ""
+        } else if(operatorsArr.includes(buttonValue)) {
+            operator = buttonValue;
+        }
+        operatorHTML.innerHTML = operator;
         return;
     }
 
-    if(operatorArray.includes(buttonValue)) {
-        if(operator !== "") {
-            const result = operate(+firstNumber, +secondNumber, operator);
-            firstNumber = result;
-            secondNumber = "";
-            operator = "";
-            displayToScreen(firstNumber, true);
-        }
-
+    if(operatorsArr.includes(buttonValue)) {
         operator = buttonValue;
-        displayToScreen(buttonValue);
+        operatorHTML.innerText = operator;
         return;
     }
 
-    if(operator === "") {
+    if(operator !== "") {
+        
         if(buttonValue === ".") {
-            if(firstNumber.includes(".")) {
-                return;
-            }
-        }
-
-        firstNumber += buttonValue;
-    } else {
-        if(buttonValue === ".") {
-            if(secondNumber.includes(".")) {
-                return;
-            }
+            if(secondNumber.includes(".")) return;
         }
         secondNumber += buttonValue;
+        secondNumberHTML.innerText = secondNumber;
+    } else if(operator === "") {
+        if(buttonValue === ".") {
+            if(firstNumber.includes(".")) return;
+        }
+        firstNumber += buttonValue;
+        firstNumberHTML.innerText = firstNumber;
     }
+});
 
-    displayToScreen(buttonValue);
-})
+function clear(result = "") {
+    firstNumber = result;
+    secondNumber = "";
+    operator = "";
+    firstNumberHTML.innerText = firstNumber;
+    secondNumberHTML.innerText = "";
+    operatorHTML.innerHTML = "";
+
+}
+
+function del() {
+    if(secondNumber === "" && operator !== "" ) {
+        operator = "";
+        operatorHTML.innerText = operator;
+    } else if(secondNumber !== "") {
+        secondNumber = secondNumber.slice(0, secondNumber.length - 1);
+        secondNumberHTML.innerText = secondNumber;
+    } else {
+        firstNumber = firstNumber.slice(0, firstNumber.length - 1);
+        firstNumberHTML.innerText = firstNumber;
+    }
+}

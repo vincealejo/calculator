@@ -9,24 +9,33 @@
 </head>
 <body>
     <div id="calculator">
-        <div id="screen"></div>
+        <div id="screen">
+            <p id="first-number"></p>
+            <div>
+                <p id="operator"></p>
+                <p id="second-number"></p>
+            </div>
+        </div>
         <div id="buttons">
-            <button>/</button>
+            <button class="option">CLEAR</button>
+            <button class="option">DEL</button>
+            <button class="op">%</button>
+            <button class="op">/</button>
             <button>7</button>
             <button>8</button>
             <button>9</button>
-            <button>*</button>
+            <button class="op">*</button>
             <button>4</button>
             <button>5</button>
             <button>6</button>
-            <button>-</button>
+            <button class="op">-</button>
             <button>1</button>
             <button>2</button>
             <button>3</button>
-            <button>+</button>
+            <button class="op">+</button>
             <button>.</button>
             <button>0</button>          
-            <button>=</button>
+            <button class="equals">=</button>
         </div>
     </div>
     <script src="script.js"></script>
